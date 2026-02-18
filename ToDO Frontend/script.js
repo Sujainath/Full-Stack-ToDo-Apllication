@@ -19,13 +19,13 @@ function login() {
     })
     .then(response => {
         if (!response.ok) {
-            // Login fail aana error message-a fetch panni throw pannum
+   
             return response.json().then(err => { throw new Error(err.message || "Login Failed!") });
         }
         return response.json();
     })
     .then(data => {
-        // Token-a quotes illama sariya store pannum
+        
         localStorage.setItem("token", data.token);
         window.location.href = "todos.html";
     })
@@ -66,7 +66,7 @@ function loadTodos() {
     fetch(`${SERVER_URL}/todo`, {
         method: "GET",
         headers: { "Authorization": `Bearer ${token}` }
-        // GET request-la body koodatha ninaivirkulga
+       
     })
     .then(response => {
         if (!response.ok) throw new Error("Failed to load todos");
@@ -106,20 +106,20 @@ function addTodo() {
         body: JSON.stringify({ title: todoText, isCompleted: false })
     })
     .then(async response => {
-        // Response success-a-nu check pannunga
+        
         if (!response.ok) {
             const errorText = await response.text();
             throw new Error(errorText || "Failed to add todo!");
         }
         
-        // Response content irukka-nu check panna 'Content-Length' illa text check pannalam
+        
         const text = await response.text();
-        return text ? JSON.parse(text) : {}; // Empty-a irundha empty object
+        return text ? JSON.parse(text) : {}; 
     })
     .then((data) => {
         console.log("Added successfully:", data);
         input.value = ""; 
-        loadTodos(); // UI refresh pannunga
+        loadTodos();
     })
     .catch(error => {
         console.error("Add Error:", error);
@@ -141,7 +141,7 @@ function updateTodoStatus(todo) {
         if (!response.ok) {
             return response.text().then(text => { throw new Error(text || "Update failed") });
         }
-        // Success aana empty response-a handle panna text() best
+        
         return response.text(); 
     })
     .then(() => {
@@ -176,7 +176,7 @@ function createTodoCard(todo) {
     checkbox.type = "checkbox";
     checkbox.checked = todo.isCompleted;
     checkbox.addEventListener("change", () => {
-        // Backend variable 'isCompleted' match aagum
+    
         updateTodoStatus({ ...todo, isCompleted: checkbox.checked });
     });
 
@@ -200,4 +200,5 @@ function createTodoCard(todo) {
 // Initialization
 document.addEventListener("DOMContentLoaded", () => {
     if (document.getElementById("todo-list")) loadTodos();
+
 });
