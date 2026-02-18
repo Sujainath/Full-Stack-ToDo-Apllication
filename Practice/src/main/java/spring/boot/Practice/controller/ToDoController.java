@@ -49,7 +49,7 @@ public class ToDoController {
     @PostMapping("/create")
     public ResponseEntity<ToDo> createsUser(@RequestBody ToDo todo) {
         ToDo savedTodo = toDoService.createtodo(todo);
-        // savedTodo null-a illama irundha thaan JSON body pogum
+
         return new ResponseEntity<>(savedTodo, HttpStatus.CREATED);
     }
 
@@ -116,3 +116,4 @@ public class ToDoController {
         return new ResponseEntity<>(toDoService.setPage(page, size),HttpStatus.OK);
     }
 }
+
