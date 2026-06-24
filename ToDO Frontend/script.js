@@ -1,5 +1,5 @@
 // Shared configuration
-const SERVER_URL = "http://localhost:8080";
+const SERVER_URL = "https://to-do-app-tvdn.onrender.com";
 const token = localStorage.getItem("token");
 
 // --- 1. LOGIN LOGIC ---
@@ -19,13 +19,13 @@ function login() {
     })
     .then(response => {
         if (!response.ok) {
-   
+            // Login fail aana error message-a fetch panni throw pannum
             return response.json().then(err => { throw new Error(err.message || "Login Failed!") });
         }
         return response.json();
     })
     .then(data => {
-        
+        // Token-a quotes illama sariya store pannum
         localStorage.setItem("token", data.token);
         window.location.href = "todos.html";
     })
@@ -45,7 +45,7 @@ function register() {
     .then(response => {
         if (response.ok) {
             alert("Registration Successfully, Please Login!");
-            window.location.href = "login.html";
+            window.location.href = "index.html";
         } else {
             return response.json().then(data => {
                 throw new Error(data.message || "Registration Failed!");
@@ -59,14 +59,14 @@ function register() {
 function loadTodos() {
     if (!token) {
         alert("Please Login First!");
-        window.location.href = "login.html";
+        window.location.href = "index.html";
         return;
     }
 
     fetch(`${SERVER_URL}/todo`, {
         method: "GET",
         headers: { "Authorization": `Bearer ${token}` }
-       
+        // GET request-la body koodatha ninaivirkulga
     })
     .then(response => {
         if (!response.ok) throw new Error("Failed to load todos");
@@ -106,20 +106,18 @@ function addTodo() {
         body: JSON.stringify({ title: todoText, isCompleted: false })
     })
     .then(async response => {
-        
+        // Response success-a-nu check pannunga
         if (!response.ok) {
             const errorText = await response.text();
             throw new Error(errorText || "Failed to add todo!");
         }
-        
-        
         const text = await response.text();
         return text ? JSON.parse(text) : {}; 
     })
     .then((data) => {
         console.log("Added successfully:", data);
         input.value = ""; 
-        loadTodos();
+        loadTodos(); // UI refresh 
     })
     .catch(error => {
         console.error("Add Error:", error);
@@ -141,7 +139,6 @@ function updateTodoStatus(todo) {
         if (!response.ok) {
             return response.text().then(text => { throw new Error(text || "Update failed") });
         }
-        
         return response.text(); 
     })
     .then(() => {
@@ -176,7 +173,7 @@ function createTodoCard(todo) {
     checkbox.type = "checkbox";
     checkbox.checked = todo.isCompleted;
     checkbox.addEventListener("change", () => {
-    
+        // Backend variable 'isCompleted' 
         updateTodoStatus({ ...todo, isCompleted: checkbox.checked });
     });
 
@@ -200,5 +197,4 @@ function createTodoCard(todo) {
 // Initialization
 document.addEventListener("DOMContentLoaded", () => {
     if (document.getElementById("todo-list")) loadTodos();
-
 });
